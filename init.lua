@@ -30,20 +30,20 @@ require('typst-preview').setup({})
 require('mason').setup()
 
 -- 2. Set up mason-lspconfig and auto-install servers
-local lspconfig = require('lspconfig')
 require('mason-lspconfig').setup({
 	ensure_installed = {
 		'lua_ls',
 		'clangd',
 		'pyright',
 		'tinymist',
+		'emmet_ls',
 		--'rust_analyzer',
 		-- add more servers here
 	},
 	automatic_installation = true, -- ensures missing servers are installed automatically
 
 	function(server_name)
-		lspconfig[server_name].setup({})
+		vim.lsp.config[server_name].setup({})
 	end,
 })
 
@@ -55,6 +55,23 @@ vim.lsp.config["tinymist"] = {
 		exportPdf = 'onSave',
 		semanticTokens = 'disable',
 	}
+}
+
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+vim.lsp.config["emmet_ls"]  = {
+    -- on_attach = on_attach,
+    capabilities = capabilities,
+    filetypes = { "css", "eruby", "html", "javascript", "javascriptreact", "less", "sass", "scss", "svelte", "pug", "typescriptreact", "vue" },
+    init_options = {
+      html = {
+        options = {
+          -- For possible options, see: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L267
+          ["bem.enabled"] = true,
+        },
+      },
+    }
 }
 
 require('telescope').setup({})
@@ -72,10 +89,10 @@ vim.keymap.set('n', '<leader>ts', '<cmd>setlocal spell spelllang=en_gb<cr>', { d
 vim.keymap.set('n', '<leader>sw', '<cmd>set wrap<cr>', { desc = 'Set wrap' })
 vim.keymap.set('n', '<leader>snw', '<cmd>set nowrap<cr>', { desc = 'Set nowrap' })
 vim.keymap.set('n', '<leader>se', '<cmd>lua vim.diagnostic.open_float()<CR>', { desc = "Show error"})
-vim.keymap.set({'n', 'i'}, "<leader>wq", "<cmd>wq<cr>", { desc = "[W]rite and [Q]uit" })
-vim.keymap.set({'n', 'i'}, "<leader>w", "<cmd>w<cr>", { desc = "[W]rite" })
+vim.keymap.set({'n'}, "<leader>wq", "<cmd>wq<cr>", { desc = "[W]rite and [Q]uit" })
+vim.keymap.set({'n'}, "<leader>w", "<cmd>w<cr>", { desc = "[W]rite" })
 -- terminal keymaps
-vim.keymap.set({'n', 'i'}, "<leader>ot", "<cmd>hor te<cr>", { desc = "[O]pen [T]erminal" })
+vim.keymap.set({'n'}, "<leader>ot", "<cmd>hor te<cr>", { desc = "[O]pen [T]erminal" })
 vim.keymap.set({'t', 'n'}, "<leader>q", "<cmd>q<cr>", { desc = "[Q]uit Terminal" })
 
 -- theme
