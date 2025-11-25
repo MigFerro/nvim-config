@@ -11,63 +11,29 @@ vim.o.splitright = true
 
 vim.g.mapleader = " "
 
--- packages via native package manager
+--------------------------------------------------------------------------------------------
+-- Theme and appearance
+--------------------------------------------------------------------------------------------
+
 vim.pack.add({
-	{ src = "https://github.com/vague2k/vague.nvim" },
-	{ src = "https://github.com/neovim/nvim-lspconfig" },
+	{ src = "https://github.com/vague2k/vague.nvim" }
+})
+
+--require "vague".setup({ transparent = true })
+vim.cmd("colorscheme vague")
+
+-- transparent statusbar
+vim.cmd(":hi statusline guibg=NONE")
+
+
+--------------------------------------------------------------------------------------------
+-- Mason
+--------------------------------------------------------------------------------------------
+
+vim.pack.add({
 	{ src = "https://github.com/mason-org/mason.nvim" },
-	{ src = "https://github.com/mason-org/mason-lspconfig.nvim" },
-	{ src = "https://github.com/nvim-lua/plenary.nvim" }, -- telescope dependency
-	{ src = "https://github.com/nvim-telescope/telescope.nvim", version = "0.1.8" },
-	{ src = "https://github.com/chomosuke/typst-preview.nvim", },
-	{ src = "https://github.com/rafamadriz/friendly-snippets", },
-	{ src = "https://github.com/folke/lazydev.nvim" },
+	{ src = "https://github.com/mason-org/mason-lspconfig.nvim" }
 })
-
--- Highlight todo, notes, etc in comments
-vim.pack.add({
-	{ src = "https://github.com/folke/todo-comments.nvim" },
-	'https://github.com/nvim-lua/plenary.nvim'
-})
-
-vim.pack.add({
-	{ src = 'https://github.com/saghen/blink.cmp', version = vim.version.range('1') },
-	'https://github.com/rafamadriz/friendly-snippets'
-})
-
-require 'blink.cmp'.setup({
-	keymap = { preset = 'default' },
-	sources = {
-        -- add lazydev to your completion providers
-        default = { "lazydev", "lsp", "path", "snippets", "buffer" },
-        providers = {
-          lazydev = {
-            name = "LazyDev",
-            module = "lazydev.integrations.blink",
-            -- make lazydev completions top priority (see `:h blink.cmp`)
-            score_offset = 100,
-          },
-        },
-      },
-	appearance = {
-		use_nvim_cmp_as_default = true,
-		nerd_font_variant = 'mono',
-	},
-	completion = { documentation = { auto_show = true } },
-	signature = { enabled = true },
-	fuzzy = { implementation = 'lua' }
-})
-
-require 'lazydev'.setup({
-	ft = 'lua',
-})
-
-
-require('telescope').setup({})
-local builtin = require("telescope.builtin")
-
-
-require('typst-preview').setup({})
 
 -- 1. Set up mason (must come before mason-lspconfig)
 require('mason').setup()
@@ -91,9 +57,84 @@ require('mason-lspconfig').setup({
 	end,
 })
 
+
+--------------------------------------------------------------------------------------------
+-- Telescope
+--------------------------------------------------------------------------------------------
+
+vim.pack.add({
+	{ src = "https://github.com/nvim-lua/plenary.nvim" }
+})
+
+vim.pack.add({
+	{ src = "https://github.com/nvim-telescope/telescope.nvim", version = vim.version.range("0.1.9") }
+})
+
+require('telescope').setup({})
+local builtin = require("telescope.builtin")
+
+
+--------------------------------------------------------------------------------------------
+-- Typst
+--------------------------------------------------------------------------------------------
+
+vim.pack.add({
+	{ src = "https://github.com/chomosuke/typst-preview.nvim", }
+})
+
+require('typst-preview').setup({})
+
+
+--------------------------------------------------------------------------------------------
+-- Snippets
+--------------------------------------------------------------------------------------------
+
+vim.pack.add({
+	{ src = "https://github.com/rafamadriz/friendly-snippets", }
+})
+
+
+
+--------------------------------------------------------------------------------------------
+-- Autocompletion (blink)
+--------------------------------------------------------------------------------------------
+
+vim.pack.add({
+	{ src = 'https://github.com/saghen/blink.cmp', version = vim.version.range('1') },
+	'https://github.com/rafamadriz/friendly-snippets'
+})
+
+require('blink.cmp').setup({
+	keymap = { preset = 'default' },
+	sources = {
+        -- add lazydev to your completion providers
+        default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+        providers = {
+          lazydev = {
+            name = "LazyDev",
+            module = "lazydev.integrations.blink",
+            -- make lazydev completions top priority (see `:h blink.cmp`)
+            score_offset = 100,
+          },
+        },
+      },
+	appearance = {
+		use_nvim_cmp_as_default = true,
+		nerd_font_variant = 'mono',
+	},
+	completion = { documentation = { auto_show = true } },
+	signature = { enabled = true },
+	fuzzy = { implementation = 'lua' }
+})
+
+
 --------------------------------------------------------------------------------------------
 -- LSP configuration
 --------------------------------------------------------------------------------------------
+
+vim.pack.add({
+	{ src = "https://github.com/neovim/nvim-lspconfig" }
+})
 
 -- capabilities
 
@@ -120,6 +161,28 @@ vim.lsp.config('*', {
 	root_markers = { '.git' },
 })
 
+--lazydev
+vim.pack.add({
+	{ src = "https://github.com/folke/lazydev.nvim" }
+})
+
+require('lazydev').setup({
+	ft = 'lua',
+})
+
+
+--------------------------------------------------------------------------------------------
+-- Quirks
+--------------------------------------------------------------------------------------------
+
+-- Highlight todo, notes, etc in comments
+vim.pack.add({
+	{ src = "https://github.com/folke/todo-comments.nvim" },
+	'https://github.com/nvim-lua/plenary.nvim'
+})
+
+require('todo-comments').setup({})
+
 
 --------------------------------------------------------------------------------------------
 -- Keymaps
@@ -143,9 +206,3 @@ vim.keymap.set({ 'n' }, "<leader>w", "<cmd>w<cr>", { desc = "[W]rite" })
 vim.keymap.set({ 'n' }, "<leader>ot", "<cmd>hor te<cr>", { desc = "[O]pen [T]erminal" })
 vim.keymap.set({ 't', 'n' }, "<leader>q", "<cmd>q<cr>", { desc = "[Q]uit Terminal" })
 
--- theme
---require "vague".setup({ transparent = true })
-vim.cmd("colorscheme vague")
-
--- transparent statusbar
-vim.cmd(":hi statusline guibg=NONE")
