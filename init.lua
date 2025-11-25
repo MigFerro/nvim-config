@@ -82,7 +82,16 @@ vim.pack.add({
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", branch = 'master' }
 })
 
-require('nvim-treesitter.configs').setup({})
+---@diagnostic disable-next-line: missing-fields
+require('nvim-treesitter.configs').setup({
+	ensure_installed = { "c", "cpp", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "python" },
+
+	sync_install = false,
+	auto_install = false,
+	ignore_install = {},
+
+	highlight = { enable = true },
+})
 
 
 --------------------------------------------------------------------------------------------
