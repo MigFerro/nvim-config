@@ -44,7 +44,7 @@ require('mason-lspconfig').setup({
 		'lua_ls',
 		'clangd',
 		'pyright',
-		'tinymist',
+		--'tinymist',
 		'emmet_ls',
 		--'rust_analyzer',
 		-- add more servers here
@@ -83,26 +83,26 @@ vim.pack.add({
 })
 
 ---@diagnostic disable-next-line: missing-fields
-require('nvim-treesitter.configs').setup({
-	ensure_installed = { "c", "cpp", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "python" },
-
-	sync_install = false,
-	auto_install = false,
-	ignore_install = {},
-
-	highlight = { enable = true },
-})
+-- require('nvim-treesitter.configs').setup({
+-- 	ensure_installed = { "c", "cpp", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "python" },
+--
+-- 	sync_install = false,
+-- 	auto_install = false,
+-- 	ignore_install = {},
+--
+-- 	highlight = { enable = true },
+-- })
 
 
 --------------------------------------------------------------------------------------------
 -- Typst
 --------------------------------------------------------------------------------------------
 
-vim.pack.add({
-	{ src = "https://github.com/chomosuke/typst-preview.nvim", }
-})
-
-require('typst-preview').setup({})
+-- vim.pack.add({
+-- 	{ src = "https://github.com/chomosuke/typst-preview.nvim", }
+-- })
+--
+-- require('typst-preview').setup({})
 
 
 --------------------------------------------------------------------------------------------
@@ -203,6 +203,27 @@ vim.pack.add({
 
 require('todo-comments').setup({})
 
+--------------------------------------------------------------------------------------------
+-- File explorer (oil.nvim)
+--------------------------------------------------------------------------------------------
+
+vim.pack.add({
+	{ src = "https://github.com/nvim-mini/mini.nvim" },
+	{ src = "https://github.com/stevearc/oil.nvim" },
+})
+
+require("mini.icons").setup()
+
+require("oil").setup({
+	default_file_explorer = true,
+	view_options = {
+		show_hidden = true,
+	},
+	columns = {
+		"icon",
+	},
+})
+
 
 --------------------------------------------------------------------------------------------
 -- Keymaps
@@ -210,18 +231,22 @@ require('todo-comments').setup({})
 
 vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format)
 
+-- Open parent directory in current window (Oil)
+vim.keymap.set('n', "-", "<CMD>Oil<CR>", { desc = "Open parent directory (Oil)" })
+
 vim.keymap.set('n', "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
 vim.keymap.set('n', "<leader>fo", builtin.oldfiles, { desc = "Telescope recently opened files" })
 vim.keymap.set('n', "<leader>gs", builtin.grep_string, { desc = "Telescope grep string" })
+vim.keymap.set('n', "<leader>lg", builtin.live_grep, { desc = "Telescope live grep" })
 vim.keymap.set('n', "gd", builtin.lsp_definitions, { desc = "Go to definition" })
 vim.keymap.set('n', "<leader><leader>", builtin.buffers, { desc = "Telescope buffers" })
-vim.keymap.set('n', "<leader>e", "<cmd>Ex<CR>", { desc = "Explorer" })
 vim.keymap.set('n', '<leader>ts', '<cmd>setlocal spell spelllang=en_gb<cr>', { desc = '[T]oggle [S]pellcheck (en-us)' })
 vim.keymap.set('n', '<leader>sw', '<cmd>set wrap<cr>', { desc = 'Set wrap' })
 vim.keymap.set('n', '<leader>snw', '<cmd>set nowrap<cr>', { desc = 'Set nowrap' })
 vim.keymap.set('n', '<leader>se', '<cmd>lua vim.diagnostic.open_float()<CR>', { desc = "Show error" })
 vim.keymap.set({ 'n' }, "<leader>wq", "<cmd>wq<cr>", { desc = "[W]rite and [Q]uit" })
 vim.keymap.set({ 'n' }, "<leader>w", "<cmd>w<cr>", { desc = "[W]rite" })
+
 -- terminal keymaps
 vim.keymap.set({ 'n' }, "<leader>ot", "<cmd>hor te<cr>", { desc = "[O]pen [T]erminal" })
 vim.keymap.set({ 't', 'n' }, "<leader>q", "<cmd>q<cr>", { desc = "[Q]uit Terminal" })
